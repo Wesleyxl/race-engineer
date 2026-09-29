@@ -1,0 +1,45 @@
+---
+description: Module boundaries, coupling rules, and cross-cutting concerns
+globs: ['**/*']
+alwaysApply: false
+---
+
+# Module Boundaries
+
+## Purpose
+
+Keep features evolvable without ripple effects across the codebase.
+
+## Module Rules
+
+- Each feature module exposes a **narrow public surface** (barrel exports, facades).
+- Cross-module calls go through **application services or shared contracts**, not deep imports into internals.
+- Shared kernel (`shared/`, `common/`) contains only truly generic utilities — not feature logic.
+
+## Allowed Dependencies
+
+```
+feature-A/presentation → feature-A/application → feature-A/domain
+feature-A/infrastructure → feature-A/domain (implements ports)
+feature-A → shared (types, utils)
+feature-A → feature-B ONLY via published contract (interface/event)
+```
+
+## Forbidden
+
+- Importing another feature's `infrastructure/` or `presentation/` directly.
+- Circular dependencies between modules.
+- "Util" folders that become dumping grounds for unrelated logic.
+
+## Cross-Cutting Concerns
+
+| Concern      | Placement                                               |
+| ------------ | ------------------------------------------------------- |
+| Logging      | Infrastructure adapter + interface in application       |
+| Auth context | Middleware/guard at presentation; policy in application |
+| Validation   | Input at boundary; domain invariants in domain layer    |
+| Errors       | Domain errors → mapped at presentation boundary         |
+
+## Refactoring Signal
+
+Suggest extraction when a file exceeds ~300 lines **or** mixes two layers. Propose incremental moves, not big-bang rewrites.

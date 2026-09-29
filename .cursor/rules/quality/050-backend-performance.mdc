@@ -1,0 +1,39 @@
+---
+description: Backend performance — DB, caching, concurrency, scalability
+globs: ['**/backend/**', '**/api/**', '**/services/**', '**/infrastructure/**']
+alwaysApply: false
+---
+
+# Backend Performance
+
+## Purpose
+
+Avoid scalability footguns in server-side code.
+
+## Database
+
+- Eliminate N+1 queries — profile before shipping list endpoints.
+- Pagination required for list APIs (cursor or offset — follow project standard).
+- Connection pooling — reuse pool; never open connection per request ad hoc.
+- Index consciously on filter/sort columns; verify with EXPLAIN on slow queries.
+
+## Caching
+
+- Cache read-heavy, slow-changing data (Redis, in-memory) with TTL.
+- Invalidate on write — document cache key strategy.
+- Never cache user-specific auth data in shared cache without key scoping.
+
+## Concurrency
+
+- Offload CPU-heavy work to background jobs.
+- Use async I/O; avoid blocking event loop (Node) or thread pool exhaustion.
+- Batch external API calls when possible.
+
+## API Design for Performance
+
+- Support field selection/sparse responses if GraphQL or `?fields=` is project pattern.
+- Stream large exports instead of loading into memory.
+
+## When to Flag
+
+If proposing synchronous processing of large files, unbounded queries, or missing pagination — warn user and suggest alternative.

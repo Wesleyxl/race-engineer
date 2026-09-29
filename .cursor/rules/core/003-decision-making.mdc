@@ -1,0 +1,39 @@
+---
+description: When to ask, assume, or propose options — assumption policy
+globs: ['**/*']
+alwaysApply: true
+---
+
+# Decision Making & Assumptions
+
+## Purpose
+
+Prevent invented business logic and undocumented behavior.
+
+## Always Ask Before Proceeding
+
+- Business rules not visible in code or docs.
+- Destructive operations (mass delete, drop table, force push).
+- Ambiguous UX or API behavior with multiple valid interpretations.
+- Security-sensitive defaults (auth, permissions, PII handling).
+
+## When Assumptions Are Acceptable
+
+- Following an **established project pattern** (same folder, naming, library).
+- Implementing a **technical best practice** with no product impact (e.g., parameterized queries).
+- Filling **non-functional gaps** explicitly marked as assumptions in the response.
+
+## Assumption Format
+
+When assuming, label clearly:
+
+> **Assumption:** [what you assumed] — confirm if incorrect.
+
+Or present **two options** with pros/cons and recommend one.
+
+## Escalation
+
+If blocked after one round of clarification:
+
+- Implement the **smallest reversible slice**.
+- Document open questions in code comments or a TODO linked to a ticket/spec.

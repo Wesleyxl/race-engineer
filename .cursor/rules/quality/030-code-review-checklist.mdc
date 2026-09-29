@@ -1,0 +1,46 @@
+---
+description: Code review checklist for AI-generated and human changes
+globs: ['**/*']
+alwaysApply: false
+---
+
+# Code Review Checklist
+
+## Purpose
+
+Self-review gate before presenting changes as complete.
+
+## Correctness
+
+- [ ] Solves the stated problem only (no scope creep)
+- [ ] Edge cases handled (empty, null, unauthorized, timeout)
+- [ ] Error paths return consistent shapes
+
+## Architecture
+
+- [ ] Code lives in the correct layer (presentation / application / domain / infra)
+- [ ] No circular or cross-feature deep imports
+- [ ] Dependencies injected, not hard-coded globals
+
+## Security
+
+- [ ] Inputs validated at boundary
+- [ ] No secrets in code, logs, or commits
+- [ ] AuthZ checked server-side for protected actions
+
+## Quality
+
+- [ ] Types explicit on public boundaries
+- [ ] No debug logging left behind
+- [ ] Tests added or updated for behavior change
+
+## Docs
+
+- [ ] README / API docs updated if behavior changed
+- [ ] Breaking changes called out in response
+
+## AI-Specific
+
+- [ ] No redundant comments stating the obvious
+- [ ] No wholesale reformat of unrelated files
+- [ ] Assumptions labeled for human review

@@ -1,0 +1,60 @@
+---
+description: API-specific security — endpoints, rate limits, CORS, headers
+globs: ['**/api/**', '**/routes/**', '**/middleware/**', '**/controllers/**']
+alwaysApply: false
+---
+
+# API Security (Backend)
+
+## Purpose
+
+Extend `010-security-fundamentals` with HTTP/API-specific controls.
+
+## Endpoint Protection
+
+| Endpoint type | Requirements |
+|---------------|--------------|
+| Public read | Rate limit, input validation, minimal response fields |
+| Authenticated | Valid token/session + authorization |
+| Admin | Role check + audit log + stricter rate limit |
+| Webhooks | Signature verification, idempotency |
+
+## Response Minimization
+
+Public listings must not expose: internal IDs format hints, emails, documents, password hashes.
+
+## CORS
+
+- Whitelist specific origins — never `*` with credentials.
+- Match project's deployed frontend URLs only.
+
+## Security Headers
+
+When configuring HTTP layer:
+
+```
+Strict-Transport-Security
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY (or CSP frame-ancestors)
+```
+
+## Rate Limiting
+
+Mandatory for:
+
+- `POST /auth/login`
+- `POST /auth/forgot-password`
+- `POST /auth/register`
+- Admin mutation endpoints
+
+Return `429` with `Retry-After` when supported.
+
+## Idempotency
+
+For payment/order creation: support `Idempotency-Key` header when project requires it.
+
+## Webhook Security
+
+- Verify HMAC/signature before processing body.
+- Process asynchronously when possible.
+- Store raw payload with correlation ID for audit.

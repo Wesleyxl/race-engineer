@@ -1,0 +1,73 @@
+---
+description: Git conventions, shell environment, and commit safety
+globs: ['**/*']
+alwaysApply: true
+---
+
+# Git Conventions
+
+## Shell & Terminal Environment
+
+Detect the workspace environment **before** running shell commands, git, or package scripts.
+
+| Workspace signal | Shell to use | Path style |
+|------------------|--------------|------------|
+| `\\wsl.localhost\...`, `\\wsl$\...`, or opened inside WSL | **WSL Ubuntu-22.04 bash** | Linux: `/home/user/project` |
+| Native Windows (`C:\Users\...`, no WSL path) | **Git Bash** (or bash-compatible syntax) | Windows: `C:\Users\...` |
+
+### WSL projects (default in this setup)
+
+- Run commands in Ubuntu-22.04: `wsl -d Ubuntu-22.04 bash -lc 'cd /path && command'`
+- Use bash syntax: `&&`, `|`, heredocs (`<<'EOF'`), `mkdir -p`, forward slashes.
+- Prefer absolute Linux paths under `/home/...`.
+- Do **not** use PowerShell syntax (`;`, `$env:`, backtick continuations).
+
+### Native Windows projects
+
+- Use Git Bash or bash-compatible commands when available.
+- If the shell is PowerShell, adapt syntax — never assume `&&` works without checking.
+- Use Windows paths only when the project is not on WSL.
+
+### Detection rule
+
+```
+IF workspace path matches wsl.localhost OR wsl$ OR starts with /home/
+  → WSL bash (Ubuntu-22.04)
+ELSE IF workspace path matches C:\ or similar native Windows root
+  → Git Bash / bash-compatible commands
+```
+
+When uncertain, check `pwd` output before chaining commands.
+
+## Commits
+
+Use **Conventional Commits**:
+
+```
+feat: add user password reset flow
+fix: prevent duplicate order submission
+refactor: extract payment validation use-case
+docs: update API authentication section
+test: add regression for null email input
+chore: bump eslint config
+```
+
+- Message describes **what changed**, not implementation steps.
+- One logical change per commit when possible.
+- **Never commit** unless explicitly requested by the user.
+
+## Branches
+
+- Avoid direct commits to `main` / `master`.
+- Naming: `feature/<short-desc>`, `fix/<short-desc>`, `chore/<short-desc>`.
+- Keep branch scope focused — no mixed refactor + critical hotfix.
+
+## Safety
+
+- No `git push --force` to main/master without explicit request and warning.
+- No `--no-verify` unless user explicitly requests bypassing hooks.
+- No amending pushed commits unless user explicitly requests.
+
+## When Suggesting Commits
+
+Propose a specific message following Conventional Commits — not generic "update code".

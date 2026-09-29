@@ -1,0 +1,52 @@
+---
+description: Spec-driven development workflow with AI agents
+globs: ['**/*']
+alwaysApply: false
+---
+
+# Spec-Driven Development
+
+## Purpose
+
+Reduce rework by aligning implementation to written intent before coding.
+
+## Workflow
+
+```
+Intent → Spec (template) → Review → Implementation → Verification
+```
+
+## When to Write a Spec First
+
+- New feature touching 3+ files or multiple layers
+- API or schema changes
+- Ambiguous requirements
+- Cross-team or cross-service work
+
+## Spec Location
+
+Default: `docs/specs/<feature-slug>.md` — adjust per project.
+
+Use template: `templates/feature-spec.template.md`.
+
+## AI Agent Steps
+
+1. **Clarify** — ask about scope, non-goals, and acceptance criteria.
+2. **Draft spec** — fill template; mark assumptions.
+3. **Wait for approval** — do not implement large features on unreviewed specs unless user says "implement directly".
+4. **Implement in slices** — map each spec section to a commit-sized unit.
+5. **Verify** — check acceptance criteria; update spec status.
+
+## Spec Status Header
+
+```md
+Status: draft | approved | in-progress | done
+Owner: @name
+Last updated: YYYY-MM-DD
+```
+
+## Anti-Patterns
+
+- Coding first, documenting never.
+- Specs that restate code line-by-line.
+- Missing explicit "out of scope" section.

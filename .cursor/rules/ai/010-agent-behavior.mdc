@@ -1,0 +1,55 @@
+---
+description: AI agent behavior — collaboration, context usage, and file editing
+globs: ['**/*']
+alwaysApply: true
+---
+
+# AI Agent Behavior
+
+## Purpose
+
+Global interaction contract for Cursor agents in this project.
+
+## Collaboration Mode
+
+- Treat the user as a senior peer: recommend, don't dictate.
+- Present alternatives with trade-offs when paths diverge meaningfully.
+- Execute autonomously on clear, scoped tasks; ask on ambiguous product decisions.
+
+## Context Hierarchy (highest wins at conflict)
+
+1. Explicit user instruction in current message
+2. Project-specific rules in `.cursor/rules/`
+3. Open files and `@` references
+4. Codebase patterns (dominant style wins)
+5. These template defaults
+
+## Context Loading
+
+Before significant work:
+
+1. Read relevant rules for the touched paths (frontend/backend globs).
+2. Inspect similar existing implementations.
+3. Check `docs/specs/` for approved specs when they exist.
+
+If critical context is missing — ask once, concisely.
+
+## File Operations
+
+- State target paths when creating files.
+- Prefer focused edits over full-file rewrites.
+- Do not create markdown/docs files unless requested or required by change-boundaries rules.
+
+## Dangerous Operations
+
+Require explicit confirmation:
+
+- Production data mutation
+- Dependency major upgrades affecting entire stack
+- Deleting migrations, auth modules, or public API routes
+
+## Response Quality
+
+- Proportional length: simple fix → short answer; architecture → structured explanation.
+- Use mermaid/diagrams only for non-trivial flows.
+- No engagement baiting; offer follow-ups only when genuinely useful.

@@ -1,0 +1,80 @@
+---
+description: Meta-guide for authoring and maintaining Cursor rules
+globs: ['**/*']
+alwaysApply: true
+---
+
+# Rule Authoring
+
+## Purpose
+
+Keep `.cursor/rules` consistent, discoverable, and maintainable as the project grows.
+
+## When to Create a Rule
+
+Triggers: "create a rule for...", "add cursor rule...", "define policy for..."
+
+Before writing:
+
+1. Confirm **topic**, **scope** (global / frontend / backend / on-demand), **globs**.
+2. Check for existing overlap — extend rather than duplicate.
+3. Ask 1–2 clarifying questions if scope is unclear.
+
+## File Naming
+
+```
+<folder>/<NNN>-<kebab-topic>.mdc
+```
+
+Examples: `security/020-client-security.mdc`, `frontend/010-component-architecture.mdc`
+
+`NNN` groups related rules; gaps (010, 020) allow insertion.
+
+## Frontmatter Template
+
+```yaml
+---
+description: One-line purpose (shown in rule picker)
+globs: ['**/*'] # or specific paths
+alwaysApply: true # true = core; false = contextual
+---
+```
+
+| Field                | Guidance                              |
+| -------------------- | ------------------------------------- |
+| `alwaysApply: true`  | Core, security, git — max ~8–12 files |
+| `alwaysApply: false` | Stack-specific, templates, checklists |
+| `globs`              | Narrow to reduce token noise          |
+
+## Internal Structure
+
+```md
+# Title
+
+## Purpose
+
+## Scope
+
+## Guidelines (actionable bullets)
+
+## Examples (✅/❌ when helpful)
+```
+
+## Validation Flow
+
+After drafting:
+
+1. Show full rule to user.
+2. Explain path, globs, alwaysApply.
+3. Confirm before treating as final.
+
+## Deployment (from template)
+
+Copy template folder contents to project:
+
+```bash
+cp -r .cursor-frontend/* .cursor/rules/
+# or symlink: ln -s ../.cursor-frontend .cursor/rules
+```
+
+Adjust project-specific overrides in `core/001-project-principles.mdc` or add `meta/030-project-overrides.mdc`.

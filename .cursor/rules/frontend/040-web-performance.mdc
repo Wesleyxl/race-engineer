@@ -1,0 +1,51 @@
+---
+description: Web performance — bundles, rendering, images, and Core Web Vitals
+globs: ['**/*.{tsx,jsx,ts,css}', '**/app/**', '**/pages/**']
+alwaysApply: false
+---
+
+# Web Performance (Frontend)
+
+## Purpose
+
+Prevent common frontend performance regressions without premature micro-optimization.
+
+## Core Web Vitals Targets (guideline)
+
+| Metric | Target |
+|--------|--------|
+| LCP | < 2.5s |
+| INP | < 200ms |
+| CLS | < 0.1 |
+
+## Bundles
+
+- Dynamic import heavy routes and modals (`React.lazy`, Next.js dynamic).
+- Analyze bundle when adding large dependencies (charts, editors).
+- Tree-shake: import named exports, not entire libraries.
+
+## Rendering (React)
+
+- `useMemo` / `useCallback` only when profiling shows benefit or referential stability required.
+- Virtualize lists with 100+ items (react-window, TanStack Virtual).
+- Avoid anonymous inline functions as props to memoized children when it causes rerenders.
+
+## Images & Assets
+
+- Use framework image optimization (next/image, responsive srcset).
+- Lazy-load below-fold media; specify width/height to prevent CLS.
+- Prefer modern formats (WebP, AVIF) when pipeline supports.
+
+## Data
+
+- Paginate or infinite-scroll large lists — never render 10k DOM nodes.
+- Prefetch on hover/intent for critical navigation when using TanStack Query / router.
+
+## Network
+
+- Debounce search inputs; cancel in-flight requests on unmount (AbortController).
+- Cache static assets with appropriate headers (framework defaults).
+
+## When Flagging to User
+
+If a solution adds heavy client work (large JSON parse, sync crypto), mention trade-off and lighter alternative.

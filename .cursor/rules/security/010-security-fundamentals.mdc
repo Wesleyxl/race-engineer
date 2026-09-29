@@ -1,0 +1,70 @@
+---
+description: Security fundamentals — secrets, auth separation, validation, dependencies
+globs: ['**/*']
+alwaysApply: true
+---
+
+# Security Fundamentals
+
+## Purpose
+
+Baseline security for all layers. Stack-specific rules extend this in `security/020-*`.
+
+## Secrets
+
+**Never** in code, logs, commits, or client bundles:
+
+- Passwords, API keys, JWT secrets, DB connection strings with credentials
+- Use env vars or secret managers; `.env.example` with placeholders only
+
+```bash
+# .env.example — OK
+DATABASE_URL=postgresql://user:password@localhost:5432/app
+JWT_SECRET=your-secret-here-min-32-chars
+```
+
+## Auth Model
+
+- **Authentication** — who is the user (token/session).
+- **Authorization** — what they can do (roles, policies).
+- Never trust client-sent roles or admin flags — validate server-side.
+- Reuse existing auth middleware/guards; do not roll custom crypto.
+
+## Input Validation
+
+All external input must be validated at the boundary:
+
+- HTTP body, query, params, headers
+- Webhooks, file uploads, form submissions
+
+Prefer project validation lib (Zod, Joi, class-validator). Reject unknown fields when strict mode is project standard.
+
+## Injection Prevention
+
+- SQL: parameterized queries / ORM — never string concatenation with user input.
+- Shell: avoid `exec` with user strings; use safe APIs.
+- HTML: escape output; use framework-safe rendering.
+
+## Errors & Responses
+
+Client receives generic messages; internals go to secure logs only.
+
+```json
+{ "error": { "code": "INTERNAL_ERROR", "message": "Something went wrong" } }
+```
+
+Never expose: stack traces, SQL errors, file paths, table names.
+
+## Dependencies
+
+- Prefer established crypto (bcrypt, Argon2) — never MD5/SHA1 for passwords.
+- Never implement custom encryption or hashing algorithms.
+- Reuse project's security libraries before adding new ones.
+
+## Security-by-Default Checklist
+
+Before shipping a feature, ask:
+
+1. Can this leak data without auth?
+2. Can it be abused at scale (needs rate limiting)?
+3. What gets logged — any PII?

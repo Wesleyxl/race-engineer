@@ -1,0 +1,73 @@
+---
+description: Agent workflow patterns — explore, plan, implement, verify
+globs: ['**/*']
+alwaysApply: false
+---
+
+# Agent Workflow Patterns
+
+## Purpose
+
+Standard operating procedures for multi-step AI agent tasks.
+
+## Pattern: Explore → Plan → Implement → Verify
+
+### 1. Explore (read-only)
+
+- Map affected files and existing patterns.
+- Identify tests, contracts, and specs.
+- Output: brief findings, no code yet.
+
+### 2. Plan
+
+- List steps with file paths.
+- Call out risks, assumptions, breaking changes.
+- Wait for approval on large scope.
+
+### 3. Implement
+
+- Smallest vertical slice first.
+- Match project conventions exactly.
+- One concern per commit when user commits.
+
+### 4. Verify
+
+- Run relevant tests/lint.
+- Manual test steps in PR description.
+- Update spec status to `done`.
+
+## Pattern: Bug Investigation
+
+```
+Reproduce → Isolate → Root cause → Fix + regression test → Verify no regressions
+```
+
+- Prefer runtime evidence (logs, failing test) over guessing.
+- Do not fix symptoms in unrelated layers.
+
+## Pattern: Refactor
+
+- Ensure test coverage on behavior first.
+- Mechanical rename/move in one commit; behavior change separate.
+- No refactor + feature in same PR unless tiny.
+
+## Subagent Usage
+
+Use focused exploration for:
+
+- Large unfamiliar codebases
+- Parallel investigation of frontend + backend
+
+Synthesize results; do not dump raw exploration logs to user.
+
+## Task Template
+
+For complex agent tasks, use `templates/agent-task.template.md`.
+
+## Stop Conditions
+
+Pause and ask user when:
+
+- Requirements contradict existing spec
+- Fix requires breaking public API
+- Three failed attempts on same error

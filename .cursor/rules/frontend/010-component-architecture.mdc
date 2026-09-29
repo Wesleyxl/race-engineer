@@ -1,0 +1,55 @@
+---
+description: React/Next component architecture — composition, hooks, and colocation
+globs: ['**/*.{tsx,jsx}', '**/components/**', '**/app/**', '**/pages/**']
+alwaysApply: false
+---
+
+# Component Architecture (Frontend)
+
+## Purpose
+
+Consistent UI layer structure for React, Next.js, and similar frameworks.
+
+## Component Types
+
+| Type | Role | Location |
+|------|------|----------|
+| Page/Route | Data loading orchestration, layout | `app/`, `pages/`, `routes/` |
+| Feature | Domain-specific UI + hooks | `features/<name>/` |
+| Shared UI | Design system, primitives | `components/ui/` |
+| Layout | Shell, nav, providers | `components/layout/` |
+
+## Rules
+
+- **Presentational vs container**: dumb components receive props; data fetching in pages/hooks.
+- Extract reusable logic to **custom hooks** (`useX`), not copy-paste in components.
+- Colocate: `FeatureName.tsx`, `FeatureName.test.tsx`, `useFeatureName.ts`, `types.ts`.
+- Prefer composition over prop drilling; use context sparingly for truly global state.
+
+## Component Size
+
+- Target < 150 lines per component file.
+- Split when mixing: fetch + form + table + modal in one file.
+
+## Props
+
+- Explicit typed props interface: `FeatureNameProps`.
+- Avoid `{...rest}` spread onto DOM without filtering.
+- Default exports only if project convention; otherwise named exports.
+
+## Server vs Client (Next.js App Router)
+
+- Server Components by default; `'use client'` only when needed (events, hooks, browser APIs).
+- Do not fetch secrets in client components.
+- Pass serializable props across server/client boundary.
+
+## Example Structure
+
+```
+features/checkout/
+  CheckoutPage.tsx
+  CheckoutForm.tsx
+  useCheckout.ts
+  checkout.types.ts
+  index.ts              # public exports only
+```

@@ -1,0 +1,67 @@
+---
+description: Context engineering — structuring prompts, rules, and docs for AI
+globs: ['**/*']
+alwaysApply: false
+---
+
+# Context Engineering
+
+## Purpose
+
+Maximize agent accuracy by supplying the right context at the right time — not more tokens.
+
+## Context Layers
+
+| Layer        | Source                   | When to use              |
+| ------------ | ------------------------ | ------------------------ |
+| System rules | `.cursor/rules/**/*.mdc` | Always (automatic)       |
+| Project docs | `README`, `docs/`, ADRs  | Features, architecture   |
+| Specs        | `docs/specs/*.md`        | Before implementation    |
+| Code anchors | `@file`, `@folder`       | Editing specific modules |
+| Runtime      | Terminal output, errors  | Debugging                |
+
+## Effective Prompts
+
+**Weak:** "fix the bug"
+
+**Strong:**
+
+```
+Fix login redirect loop after password reset.
+Context: @src/features/auth/ @docs/specs/password-reset.md
+Expected: redirect to /dashboard when token valid.
+Do not change API contract.
+```
+
+## Rule Design Principles
+
+- One concern per rule file (< 500 lines, ideally < 150).
+- Actionable bullets, not philosophy.
+- Concrete ✅/❌ examples for patterns that fail often.
+- `globs` narrow enough to avoid noise; `alwaysApply: true` only for core rules.
+
+## Context Budget
+
+Prefer:
+
+1. One spec + 2–4 anchor files over entire repo
+2. Summaries in `docs/` over repeating code in chat
+3. `@`-references over pasted large blocks
+
+## Anti-Patterns
+
+- Contradictory rules in multiple files (resolve via hierarchy doc).
+- Rules that duplicate linter config verbatim.
+- Specs without acceptance criteria.
+
+## Example: Feature Context Pack
+
+When starting a feature, create or reference:
+
+```
+docs/specs/checkout-v2.md          # intent
+src/modules/checkout/              # @folder anchor
+.cursor/rules/backend/010-api-*    # auto via globs when editing
+```
+
+See `templates/context-engineering.example.md` for full walkthrough.

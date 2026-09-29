@@ -1,0 +1,47 @@
+---
+description: Project-specific overrides — highest precedence after explicit user instructions
+globs: ['**/*']
+alwaysApply: true
+---
+
+# Project Overrides
+
+## Purpose
+
+Customize this template for a specific repository. **Edit this file** after copying rules to your project.
+
+## Stack
+
+<!-- Uncomment and fill -->
+
+<!-- - Framework: Next.js 15 App Router -->
+<!-- - Language: TypeScript 5.x strict -->
+<!-- - Package manager: pnpm -->
+<!-- - Test runner: Vitest + Playwright -->
+
+## Folder Layout
+
+<!-- Document your project's actual structure so agents follow it -->
+
+<!--
+src/
+  features/
+  shared/
+  app/
+-->
+
+## Non-Default Decisions
+
+<!-- List any intentional deviations from template defaults -->
+
+<!-- - We use RPC-style routes instead of REST — see docs/adr/003-rpc.md -->
+<!-- - Auth: Clerk — do not implement custom JWT -->
+
+## Contacts & Docs
+
+<!-- - API docs: docs/api/openapi.yaml -->
+<!-- - Architecture: ARCHITECTURE.md -->
+
+## Rules Disabled in This Project
+
+<!-- List rule files intentionally not copied or set alwaysApply: false -->

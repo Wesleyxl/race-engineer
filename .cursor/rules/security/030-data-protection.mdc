@@ -1,0 +1,46 @@
+---
+description: Data protection — PII, encryption, retention, compliance basics
+globs: ['**/*']
+alwaysApply: false
+---
+
+# Data Protection (Backend)
+
+## Purpose
+
+Handle sensitive data responsibly across storage, transit, and logs.
+
+## Classification
+
+| Class | Examples | Handling |
+|-------|----------|----------|
+| Public | Product names | Standard |
+| Internal | Internal IDs | Access control |
+| Confidential | Email, phone | Encrypt at rest if required; minimize collection |
+| Restricted | Passwords, tokens, CPF | Hash/encrypt; never log; strict access |
+
+## Storage
+
+- Passwords: bcrypt/Argon2 only — never reversible encryption.
+- PII fields: collect minimum necessary; document retention policy.
+- Encrypt sensitive columns at rest when compliance requires (project key management).
+
+## Transit
+
+- TLS everywhere — no sensitive data over plain HTTP.
+- Validate SSL in outbound HTTP clients (don't disable cert verification).
+
+## Logs & Errors
+
+- Redact PII in logs (mask email: `j***@example.com`).
+- No full request bodies in production logs by default.
+
+## Deletion & Retention
+
+- Support user data deletion requests when product requires GDPR/LGPD.
+- Soft-delete vs hard-delete per domain rules — document in spec.
+
+## Backups
+
+- Treat backups as sensitive — same access controls as primary DB.
+- Never restore production backups to unsecured environments.

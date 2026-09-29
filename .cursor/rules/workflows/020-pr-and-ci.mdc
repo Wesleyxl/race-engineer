@@ -1,0 +1,40 @@
+---
+description: CI/CD integration rules and pipeline change policy
+globs: ['**/*']
+alwaysApply: false
+---
+
+# CI & Pull Requests
+
+## Purpose
+
+Keep delivery pipelines stable while enabling safe automation.
+
+## CI Rules
+
+- Do not modify CI/CD configs without explicit approval (see `002-change-boundaries`).
+- Preserve existing steps: lint → test → build → deploy (order may vary).
+- New scripts must align with `package.json` / Makefile / existing tooling.
+
+## Pull Request Expectations
+
+When user asks for a PR, include:
+
+1. **Summary** — what and why (1–3 bullets)
+2. **Test plan** — concrete verification steps
+3. **Breaking changes** — explicit callout if any
+
+## Pre-Merge Checklist
+
+- Lint passes locally or in CI
+- Tests relevant to change pass
+- No secrets in diff
+- Docs updated for user-visible changes
+
+## Agent Workflow
+
+For multi-step features:
+
+1. Implement smallest vertical slice
+2. Run/tests verify
+3. Iterate — avoid large unverified batches

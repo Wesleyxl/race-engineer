@@ -1,0 +1,33 @@
+---
+description: Hard boundaries — what the AI must not change without explicit approval
+globs: ['**/*']
+alwaysApply: true
+---
+
+# Change Boundaries
+
+## Purpose
+
+Protect production-critical and contract-stable areas from accidental modification.
+
+## Never Change Without Explicit Approval
+
+| Area | Examples | Risk |
+|------|----------|------|
+| CI/CD | `.github/workflows`, pipelines, deploy scripts | Broken releases |
+| Infrastructure | Terraform, K8s manifests, DNS, secrets stores | Outages |
+| Applied migrations | SQL migrations already in production | Data corruption |
+| Public API contracts | Response shapes, error codes in use | Breaking clients |
+| Auth flows | Token strategy, session model | Security incidents |
+
+## When Change Is Requested
+
+1. State the risk in plain language.
+2. Propose an **incremental plan** (feature flag, dual-write, deprecation window).
+3. Flag **breaking changes** explicitly before implementing.
+
+## Safe Default Scope
+
+- Prefer the smallest diff that solves the stated problem.
+- Do not refactor unrelated code in the same change unless asked.
+- Do not delete files, data, or endpoints without confirmation when impact is unclear.

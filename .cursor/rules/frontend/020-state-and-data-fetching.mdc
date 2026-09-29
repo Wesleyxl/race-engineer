@@ -1,0 +1,56 @@
+---
+description: Client state, server state, and data fetching patterns
+globs: ['**/*.{tsx,jsx,ts}', '**/hooks/**', '**/stores/**', '**/features/**']
+alwaysApply: false
+---
+
+# State & Data Fetching (Frontend)
+
+## Purpose
+
+Clear separation between UI state, server cache, and URL state.
+
+## State Categories
+
+| Type | Tool examples | Use for |
+|------|---------------|---------|
+| Server state | TanStack Query, SWR, RTK Query | API data, caching, refetch |
+| URL state | searchParams, nuqs | Filters, pagination, shareable views |
+| Local UI | useState, useReducer | Modals, form drafts, toggles |
+| Global client | Zustand, Jotai, Context | Auth snapshot, theme — minimal scope |
+
+## Rules
+
+- **Do not** duplicate server data in global client stores — use a server-state library.
+- Co-locate query keys and fetchers with the feature module.
+- Invalidate or update cache after mutations — avoid full page reloads.
+- Handle loading, error, and empty states explicitly in UI.
+
+## Fetching
+
+- Centralize HTTP client (axios/fetch wrapper) with auth interceptors.
+- Map API errors to user-friendly messages using stable `error.code` from backend.
+- Avoid fetch in `useEffect` when project uses SSR/RSC — prefer server loaders.
+
+## Optimistic Updates
+
+Only when rollback path is clear and UX benefit is real.
+
+```ts
+// Pattern: optimistic → rollback on error
+onMutate: async (newItem) => {
+  await queryClient.cancelQueries({ queryKey: ['items'] })
+  const previous = queryClient.getQueryData(['items'])
+  queryClient.setQueryData(['items'], (old) => [...old, newItem])
+  return { previous }
+},
+onError: (_err, _vars, context) => {
+  queryClient.setQueryData(['items'], context?.previous)
+},
+```
+
+## Anti-Patterns
+
+- Prop drilling 5+ levels instead of composition or context.
+- Storing API responses in Redux "just because".
+- Unbounded polling without backoff.

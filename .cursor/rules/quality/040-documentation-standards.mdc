@@ -1,0 +1,57 @@
+---
+description: Documentation standards — when, where, and how to document
+globs: ['**/*']
+alwaysApply: false
+---
+
+# Documentation Standards
+
+## Purpose
+
+Right-sized documentation — enough to onboard and maintain, not bureaucracy.
+
+## When to Document
+
+| Trigger | Action |
+|---------|--------|
+| New feature (user-visible) | Update README or feature doc |
+| API change | Update OpenAPI / API.md |
+| Architecture decision | ADR in `docs/adr/` |
+| Env / setup change | Update README setup section |
+| Internal refactor only | Code comments if non-obvious |
+
+## Document Locations
+
+```
+README.md                 # overview, quickstart
+docs/
+  specs/                  # feature specifications
+  adr/                    # architecture decision records
+  guides/                 # how-to guides
+  api/                    # OpenAPI, endpoint docs
+ARCHITECTURE.md           # system overview (optional)
+```
+
+## Doc Structure (default)
+
+1. **Context** — why this exists
+2. **How it works** — behavior, flows
+3. **How to use** — commands, examples
+4. **Caveats** — limits, known issues
+
+## Style
+
+- Direct, pragmatic prose — complete sentences.
+- Code examples must be runnable or clearly marked pseudo.
+- Keep docs in sync with code in the same PR when possible.
+
+## Templates
+
+- Feature spec: `templates/feature-spec.template.md`
+- Design doc: `templates/design-doc.template.md`
+- ADR: `templates/adr.template.md`
+
+## AI Behavior
+
+- Suggest doc updates with ready-to-paste snippets.
+- Do not create new doc files unless user requests or change is significant.

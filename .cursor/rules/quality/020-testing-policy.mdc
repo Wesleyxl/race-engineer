@@ -1,0 +1,51 @@
+---
+description: Testing policy — when to test, quality bar, and bug-fix workflow
+globs: ['**/*']
+alwaysApply: true
+---
+
+# Testing Policy
+
+## Purpose
+
+Tests protect behavior, not line coverage metrics.
+
+## When Tests Are Required
+
+| Change | Minimum expectation |
+|--------|---------------------|
+| New feature / use-case | At least one unit or integration test for happy path |
+| Bug fix | Regression test reproducing the bug |
+| API contract change | Contract or integration test for request/response |
+| Refactor (no behavior change) | Existing tests must pass; add if gap exposed |
+
+## Framework
+
+- Use the **framework already configured** (Jest, Vitest, Playwright, etc.).
+- Match existing conventions: `*.test.ts`, `*.spec.ts`, `__tests__/`, colocated tests.
+- Do not add a second test runner without justification.
+
+## Quality Bar
+
+**Test behavior, not implementation:**
+
+```ts
+// ❌ Brittle — tests internal call order
+expect(mockRepo.save).toHaveBeenCalledWith(...)
+
+// ✅ Observable outcome
+expect(await service.createUser(input)).toMatchObject({ email: input.email })
+```
+
+Include error paths for critical flows (auth, payments, data mutation).
+
+## Bug Fix Workflow
+
+1. Write failing test that reproduces the bug.
+2. Fix the code.
+3. Confirm test passes; run related suite.
+
+## CI
+
+- Never remove lint, test, or build steps from existing pipelines.
+- Align npm/pnpm/yarn scripts with `package.json` — no duplicate commands for the same action.

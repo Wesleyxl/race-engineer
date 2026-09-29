@@ -1,0 +1,54 @@
+---
+description: Clean Architecture layers, dependency direction, and SOLID defaults
+globs: ['**/*']
+alwaysApply: true
+---
+
+# Clean Architecture & SOLID
+
+## Purpose
+
+Default structural model when the project has no stronger convention documented elsewhere.
+**Project-specific layout always wins** over this template.
+
+## Layer Model
+
+```
+Presentation → Application → Domain ← Infrastructure
+     UI/API handlers    use-cases    entities/rules    DB, HTTP, queues
+```
+
+**Dependency rule:** inner layers never import outer layers.
+
+| Layer          | Responsibility                           | Must NOT                   |
+| -------------- | ---------------------------------------- | -------------------------- |
+| Presentation   | HTTP handlers, UI components, routing    | Business rules, SQL        |
+| Application    | Use-cases, orchestration, DTO mapping    | Framework-specific details |
+| Domain         | Entities, value objects, domain services | HTTP, ORM, UI              |
+| Infrastructure | Repositories, adapters, external APIs    | Business policy            |
+
+## SOLID (Actionable)
+
+- **S** — One reason to change per module/class.
+- **O** — Extend via new types/strategies, not by editing stable core.
+- **L** — Substitutes must honor contracts (interfaces).
+- **I** — Small, focused interfaces; no "god" repositories.
+- **D** — Depend on abstractions (ports); inject adapters in composition root.
+
+## Folder Heuristic (adjust to project)
+
+```
+src/
+  modules/<feature>/
+    domain/
+    application/
+    infrastructure/
+    presentation/
+  shared/
+```
+
+## AI Behavior
+
+- Place new code in the **correct layer**; split files when responsibilities diverge.
+- Before proposing a new top-level folder structure: inspect existing layout and justify deviations.
+- Prefer **feature modules** over technical silos (`controllers/`, `services/` everywhere) in greenfield work.

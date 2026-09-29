@@ -1,0 +1,44 @@
+---
+description: Accessibility and UX standards for web interfaces
+globs: ['**/*.{tsx,jsx,vue,svelte,html,css}']
+alwaysApply: false
+---
+
+# Accessibility & UX (Frontend)
+
+## Purpose
+
+Ship interfaces usable by default — WCAG 2.1 AA as target unless project specifies otherwise.
+
+## Accessibility Checklist
+
+- [ ] Semantic HTML (`button` not `div onClick`, `nav`, `main`, `heading` hierarchy)
+- [ ] Keyboard navigable: focus order, visible focus ring, Escape closes modals
+- [ ] Labels: every input has associated `<label>` or `aria-label`
+- [ ] Images: meaningful `alt` text; decorative `alt=""`
+- [ ] Color: contrast ≥ 4.5:1 for text; don't rely on color alone
+- [ ] Live regions for async feedback (`aria-live` for toasts/errors)
+- [ ] Forms: associate errors with fields (`aria-describedby`, `aria-invalid`)
+
+## UX Standards
+
+- Loading: skeleton or spinner — never blank screen during fetch.
+- Errors: actionable message + retry when applicable.
+- Destructive actions: confirmation dialog.
+- Empty states: explain what to do next.
+
+## Forms
+
+- Disable submit during in-flight request; show progress.
+- Validate on blur/submit per project pattern — always show field-level errors.
+- Preserve user input on server error.
+
+## Internationalization
+
+- Externalize user-visible strings when i18n is in project scope.
+- Avoid concatenating translated fragments — use interpolation.
+
+## Testing A11y
+
+- Run axe or eslint-plugin-jsx-a11y in CI when configured.
+- Manual keyboard pass for new interactive flows.

@@ -1,0 +1,65 @@
+---
+description: Forms, client validation, and API client integration
+globs: ['**/*.{tsx,jsx,ts}', '**/features/**', '**/lib/api/**']
+alwaysApply: false
+---
+
+# Forms & API Client (Frontend)
+
+## Purpose
+
+Consistent form handling and typed API consumption on the client.
+
+## Forms
+
+- Use project form library (React Hook Form, Formik) — do not add another without reason.
+- Schema validation aligned with backend (shared Zod schemas when monorepo).
+- Client validation is **UX only** — server remains source of truth.
+
+## API Client Layer
+
+Structure:
+
+```
+lib/api/
+  client.ts          # base fetch/axios, auth, error interceptor
+  types/             # response/request types (or import from shared package)
+  endpoints/
+    users.ts         # typed functions per resource
+```
+
+## Typed Endpoints
+
+```ts
+export async function createUser(
+  input: CreateUserRequest
+): Promise<CreateUserResponse> {
+  return apiClient.post('/users', input)
+}
+```
+
+- Never scatter raw `fetch('/api/...')` across components.
+- Map HTTP status + `error.code` to domain errors for UI.
+
+## Error Display
+
+| API error | UI behavior |
+|-----------|-------------|
+| `VALIDATION_ERROR` | Field-level messages from `details` |
+| `401` | Redirect to login |
+| `403` | Permission denied message |
+| `500` | Generic error + support option |
+
+## DTO Alignment
+
+When backend contract changes:
+
+1. Update shared types/schemas first.
+2. Update API client functions.
+3. Update UI consumers.
+4. Flag breaking changes to user.
+
+## Do Not
+
+- Encode business authorization in UI-only flags.
+- Send passwords or tokens in URL query strings.

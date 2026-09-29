@@ -1,0 +1,44 @@
+---
+description: Rule precedence and conflict resolution hierarchy
+globs: ['**/*']
+alwaysApply: true
+---
+
+# Context Hierarchy & Precedence
+
+## Purpose
+
+Resolve conflicts when multiple rules apply.
+
+## Precedence Order (highest first)
+
+1. **Explicit user message** in current conversation
+2. **Project overrides** — `meta/030-project-overrides.mdc` (if present)
+3. **Change boundaries** — `core/002-change-boundaries.mdc`
+4. **Stack-specific rules** — `frontend/**` or `backend/**` globs
+5. **Domain rules** — `security/`, `quality/`, `workflows/`
+6. **Core principles** — `core/001-project-principles.mdc`
+7. **Existing codebase patterns** — when rules are silent
+
+## Conflict Examples
+
+| Situation                                            | Resolution                                            |
+| ---------------------------------------------------- | ----------------------------------------------------- |
+| Rule says REST plural; project uses RPC style        | Follow **project code**; suggest doc update           |
+| User says "skip tests"; testing policy says required | Follow **user**; warn about risk                      |
+| Security rule vs convenience shortcut                | **Security wins** unless user accepts risk explicitly |
+
+## Glob Overlap
+
+When both `quality/010-typescript-standards.mdc` and `frontend/010-component-architecture.mdc` apply:
+
+- Shared standards (naming, types) ← quality
+- Component patterns (composition, hooks) ← frontend
+
+Both apply; no duplication of content between files.
+
+## Maintenance
+
+- Review rules quarterly or when stack changes.
+- Delete or merge rules unused for 2+ sprints.
+- Keep `alwaysApply: true` count low to preserve context budget.

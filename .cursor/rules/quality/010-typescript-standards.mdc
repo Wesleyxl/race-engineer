@@ -1,0 +1,56 @@
+---
+description: Shared TypeScript standards — naming, typing, imports, errors, logging
+globs: ['**/*.{ts,tsx,js,jsx}']
+alwaysApply: true
+---
+
+# TypeScript Standards (Shared)
+
+## Naming
+
+| Element | Convention | Example |
+|---------|------------|---------|
+| Variables, functions, params | `camelCase`, English | `fetchUserById` |
+| Classes, types, interfaces | `PascalCase` | `UserRepository` |
+| Global constants | `SCREAMING_SNAKE_CASE` when truly constant | `MAX_RETRY_COUNT` |
+| Files | kebab-case or project convention | `user-service.ts` |
+
+Avoid obscure abbreviations unless established in the project (`req`, `res` in handlers OK).
+
+## Typing
+
+- Avoid `any`; if unavoidable, comment why and narrow scope.
+- Explicit return types on public APIs and use-case boundaries.
+- Derive types from schemas (Zod, etc.) when validation exists — single source of truth.
+- Centralize shared types in `types/`, `domain/`, or `shared/` per project layout.
+
+## Functions
+
+- Single responsibility; prefer < 40 lines for business logic.
+- Extract complex logic to use-cases, services, or hooks — not inline in handlers/components.
+- No duplicated logic: propose shared helper when pattern repeats 3+ times.
+
+## Imports
+
+Order:
+
+1. External libraries
+2. Internal aliases (`@/...`)
+3. Relative imports
+
+Prefer path aliases over deep relative paths (`../../../`).
+
+## Error Handling
+
+- Never swallow errors silently.
+- Use project logger; map to user-safe messages at boundaries.
+- Async: always `await` with try/catch or `.catch()` at orchestration layer.
+
+## Logging
+
+- No `console.log` in production paths — use configured logger.
+- Never log: passwords, tokens, full PII, credit card data.
+
+## Comments
+
+Comment **why**, not **what**. Document non-obvious business rules and edge cases only.

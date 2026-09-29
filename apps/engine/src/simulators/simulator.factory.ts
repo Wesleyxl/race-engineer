@@ -1,6 +1,6 @@
 /**
  * title: "Registration of game adapters"
- * description: "Single place to instantiate simulators. Today F1 25 and AMS2. New game: create adapter and add it to this array — the UI and the UDP pass to using it."
+ * description: "Single place to instantiate simulators. Today F1 25. New game: create an adapter like f1-25 and add it to this array — the UI select and the UDP pick it up."
  */
 
 import { SimulatorAdapter } from './simulator.adapter'

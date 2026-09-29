@@ -1,0 +1,7 @@
+{
+  "name": "race-engineer",
+  "private": true,
+  "scripts": {
+    "dev": "npm run dev --prefix apps/desktop"
+  }
+}

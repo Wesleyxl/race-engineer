@@ -1,0 +1,53 @@
+---
+description: Fluxo de telemetria, contrato do simulador e IPC entre Electron, Nest e React
+globs:
+  - apps/engine/src/simulators/**/*
+  - apps/engine/src/telemetry/**/*
+  - apps/engine/src/ipc/**/*
+  - apps/engine/src/logs/**/*
+  - apps/engine/src/core/model/**/*
+  - apps/desktop/**/*
+  - ui/src/**/*
+alwaysApply: false
+---
+
+# Telemetria, simuladores e IPC
+
+## Layout
+
+- `apps/engine` — NestJS. UDP, parse, `TelemetryModel`, log e canal IPC.
+- `apps/desktop` — Electron. Compila o engine, sobe o Vite e faz a ponte.
+- `ui` — React. Select de simulador, Iniciar/Parar e registro ao vivo.
+
+Subir: `npm run dev` na raiz (ou em `apps/desktop`).
+
+## Fluxo
+
+```
+Jogo --UDP--> TelemetryService
+         --> adapter.parse(buffer) --> TelemetryModel | null
+         --> publish (eventos, overlay, dashboard, wav)
+React <--IPC preload-- Electron main <--fork / process.send-- Nest
+```
+
+O resto do sistema só lê `TelemetryModel` (`apps/engine/src/core/model/telemetry.model.ts`). `lap`, `speedKmh` e `gear` significam a mesma coisa em qualquer jogo.
+
+Logs passam por `LogService` (`ReplaySubject` do RxJS). Cada linha tem `timestamp` `DD/MM/YYYY HH:MM:SS.SSS`. O renderer não abre UDP e não vê o buffer cru.
+
+## Novo simulador
+
+Base: `apps/engine/src/simulators/adapters/f1-25/`.
+
+1. Criar `adapters/<jogo>/` com `adapter.ts`, `constants.ts`, `packets/` e `parsers/`.
+2. Implementar `SimulatorAdapter`: `id` estável, `name`, `defaultUdpPort`, `parse(buffer): TelemetryModel | null`.
+3. Agregar os pacotes daquele UDP no estado do adapter e preencher o modelo. Pacote inválido ou incompleto retorna `null`.
+4. Registrar em `createSimulatorAdapters()` (`simulator.factory.ts`).
+5. Não alterar o modelo canônico para caber um jogo. Campo ausente fica no zero de `createEmptyTelemetry()`.
+
+O select lista `toSimulatorInfo()` (sem `parse`). Ao mudar, a UI manda `simulator:select`. O Nest troca o adapter ativo; os próximos datagramas usam esse `parse`. Iniciar manda `telemetry:start` e abre a porta do adapter (F1 25: `127.0.0.1:20777`).
+
+## Fora deste fluxo
+
+- Não abrir socket UDP na UI nem no processo do Electron.
+- Não importar `packets/` ou `parsers/` de um jogo fora do adapter dele.
+- Overlay, dashboard e wav consomem o `TelemetryModel` em `publish`, nunca o datagram.

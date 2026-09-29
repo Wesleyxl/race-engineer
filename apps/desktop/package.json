@@ -1,0 +1,17 @@
+{
+  "name": "desktop",
+  "private": true,
+  "version": "0.0.1",
+  "description": "Electron shell do Race Engineer. Sobe o Nest, o Vite e a ponte IPC.",
+  "main": "dist/main.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "dev": "npm run build && electron .",
+    "start": "npm run dev"
+  },
+  "devDependencies": {
+    "@types/node": "^24.19.0",
+    "electron": "^38.1.2",
+    "typescript": "^5.7.3"
+  }
+}

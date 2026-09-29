@@ -1,0 +1,222 @@
+:root {
+  color-scheme: dark;
+  --bg: #10140f;
+  --bar: #171d16;
+  --line: #2c3828;
+  --text: #e7f0df;
+  --muted: #8b9784;
+  --ok: #b6f25c;
+  --warn: #e6c15a;
+  --error: #ff6b5a;
+  --info: #d5e0cc;
+  font-family: "Segoe UI", Ubuntu, sans-serif;
+  font-synthesis: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+}
+
+button,
+select {
+  font: inherit;
+}
+
+.shell {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 16px 20px;
+  background: var(--bar);
+  border-bottom: 1px solid var(--line);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-right: auto;
+}
+
+.brand h1 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 650;
+  letter-spacing: 0.01em;
+}
+
+.brand p {
+  margin: 2px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.live-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--muted);
+  flex: none;
+}
+
+.live-dot.on {
+  background: var(--ok);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .live-dot.on {
+    animation: pulse 1.6s ease-out infinite;
+  }
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--ok) 65%, transparent);
+  }
+  100% {
+    box-shadow: 0 0 0 8px transparent;
+  }
+}
+
+.simulator {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.simulator select,
+.actions button {
+  height: 36px;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+}
+
+.simulator select {
+  min-width: 180px;
+  padding: 0 10px;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+}
+
+.actions button {
+  padding: 0 16px;
+  cursor: pointer;
+}
+
+.actions button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.start {
+  background: var(--ok);
+  color: #142006;
+  border-color: transparent;
+  font-weight: 650;
+}
+
+.stop {
+  background: transparent;
+  color: var(--text);
+}
+
+.hint {
+  margin: 0;
+  padding: 8px 20px;
+  color: var(--muted);
+  font-size: 12px;
+  border-bottom: 1px solid var(--line);
+}
+
+.log {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 8px 0 24px;
+}
+
+.log ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.empty {
+  margin: 0;
+  padding: 20px;
+  color: var(--muted);
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 22ch 5ch 11ch minmax(0, 1fr);
+  gap: 12px;
+  padding: 6px 20px;
+  font-family: "Ubuntu Mono", "Cascadia Mono", ui-monospace, monospace;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.row time,
+.row .source {
+  color: var(--muted);
+}
+
+.row.info .message {
+  color: var(--info);
+}
+
+.row.ok .level,
+.row.ok .message {
+  color: var(--ok);
+}
+
+.row.warn .level,
+.row.warn .message {
+  color: var(--warn);
+}
+
+.row.error .level,
+.row.error .message {
+  color: var(--error);
+}
+
+@media (max-width: 800px) {
+  .bar {
+    flex-wrap: wrap;
+  }
+
+  .row {
+    grid-template-columns: 1fr;
+    gap: 2px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--line);
+  }
+}

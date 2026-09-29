@@ -166,6 +166,8 @@ export class F125Adapter implements SimulatorAdapter {
       model.tyreTemperature = {
         surface: toWheels(car.tyresSurfaceTemperature),
         inner: toWheels(car.tyresInnerTemperature),
+        // O pacote CarTelemetry do F1 25 não traz temperatura de aro.
+        rim: toWheels([]),
       };
       model.tyrePressure = toWheels(car.tyresPressure);
     }
